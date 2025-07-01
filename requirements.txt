@@ -1,0 +1,15 @@
+# Framework do Bot
+python-telegram-bot[ext]
+
+# Geração de Voz
+gTTS
+
+# Inteligência Artificial (LLM em CPU)
+ctransformers
+
+# Banco de Dados e Cache
+asyncpg
+redis
+
+# FFmpeg (para processamento de áudio) não está aqui, 
+# pois precisa ser instalado no sistema operacional.

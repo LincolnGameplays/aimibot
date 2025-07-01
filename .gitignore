@@ -1,0 +1,26 @@
+# Arquivos de Ambiente Virtual
+venv/
+.venv/
+env/
+
+# Arquivos de Cache do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Arquivos de Cache e Logs do AimiBOT
+aimibot/cache/
+*.log
+
+# Modelos de Linguagem (geralmente são muito grandes)
+*.gguf
+*.bin
+
+# Segredos e Configurações Locais
+.env
+config.py # IMPORTANTE: Descomente esta linha se você for versionar o projeto
+          # e crie um `config.py.example` para compartilhar.
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db

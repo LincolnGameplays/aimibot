@@ -1,0 +1,63 @@
+# Arquivo de Orquestração Docker - Ecossistema AimiAI
+# Versão 3.8 do Docker Compose
+
+version: '3.8'
+
+services:
+  # Proxy Reverso que gerencia o tráfego para a API e o Dashboard
+  nginx:
+    image: nginx:alpine
+    container_name: aimi_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./dashboard_frontend/build:/var/www/aimiai/dashboard # Onde o build do React será servido
+    depends_on:
+      - fastapi_app
+    restart: unless-stopped
+
+  # Backend principal (API da Dashboard + Webhooks + WebSockets)
+  fastapi_app:
+    container_name: aimi_fastapi
+    build:
+      context: ./dashboard_api
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./dashboard_api:/app # Monta o código para desenvolvimento live
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres_db
+      - redis_cache
+    restart: unless-stopped
+
+  # Banco de Dados PostgreSQL
+  postgres_db:
+    image: postgres:14-alpine
+    container_name: aimi_postgres
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  # Cache de alta velocidade
+  redis_cache:
+    image: redis:7-alpine
+    container_name: aimi_redis
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+# Volumes persistentes para não perder dados
+volumes:
+  postgres_data:
+  redis_data:
